@@ -1,35 +1,48 @@
-export async function masterExtractor(txt: string) {
-//   const stringsRegex = new RegExp("(?<!\\\\)'.+?(?<!\\\\)'");
-//   const strings = txt.match(stringsRegex);
-//   if (!strings) {
-//     console.log("not matched");
-//     return;
-//   }
-//   console.log({strings})
-//   let p = strings[3];
-//   let k = strings[4].split("|");
-  let p =txt.substring(119,1083);
-  let k = txt.substring(1091,2257).split("|");
+export function masterExtractor(txt: string) {
+  const stringsRegex =/(?<!\\)'.+?(?<!\\)'/g;
+let m;
+const strings:any = []
+while ((m = stringsRegex.exec(`${txt}`)) !== null) {
+    // This is necessary to avoid infinite loops with zero-width matches
+    if (m.index === stringsRegex.lastIndex) {
+        stringsRegex.lastIndex++;
+    }
+    
+    // The result can be accessed through the `m`-variable.
+    m.forEach((match, groupIndex) => {
+        strings.push(match)
+    });
+}
+  if (!strings||strings.length<=0) {
+    console.log("not matched");
+    return;
+  }
+  let p = strings[3]+"";
+  let k = strings[4].split("|");
 
-//   const numberRegex = "(?<=,)d+(?=,)";
-//   const numbers = txt.match(numberRegex)?.map((item) => {
-//     return parseInt(item);
-//   });
-//   if (!numbers) {
-//     console.log("numbers not found");
-//     return;
-//   }
-//   let a = numbers[0];
-//   let c = numbers[1] - 1;
-  let a =parseInt(txt.substring(1084,1086));
-  let c =parseInt(txt.substring(1087,1090));
+  const numberRegex = /(?<=,)\d+(?=,)/g;
+const numbers:any = []
+while ((m = numberRegex.exec(`${txt}`)) !== null) {
+    if (m.index === stringsRegex.lastIndex) {
+        stringsRegex.lastIndex++;
+    }
+    
+    m.forEach((match, groupIndex) => {
+        numbers.push(parseInt(match))
+    });
+}
+  if (!strings||strings.length<=0) {
+    console.log("not matched");
+    return;
+  }
+  let a = numbers[0];
+  let c = numbers[1] - 1;
 
   while (c >= 0) {
-    const replaceRegex = new RegExp(`\b${c.toString(a)}\b`);
+    const replaceRegex = new RegExp(`\\b${c.toString(a)}\\b`) 
     p = p.replace(replaceRegex, k[c]);
     c--;
   }
-  console.log({p})
-  const sourcesRegex = new RegExp(`(?<=sources':\[\{src:").+?(?=")`,"gm");
-  return p.match(sourcesRegex);
+  const sourcesRegex = /(?<=sources':\[\{src:").+?(?=")/g;
+  return p.match(sourcesRegex)+"";
 }

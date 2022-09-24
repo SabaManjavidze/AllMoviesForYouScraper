@@ -10,6 +10,7 @@ export async function doodUrlParse(url: string) {
   if (!content.includes("'/pass_md5/")) return null;
   const md5 = content.substring(content.indexOf("'/pass_md5/"), 25);
   console.log(content);
+  return "";
   // const token = md5.substringAfterLast("/")
   // const doodTld = url.substringAfter("https://dood.").substringBefore("/")
   // const randomString = getRandomString()
