@@ -17,7 +17,8 @@ async function doSumn(masterUrl: string) {
     const video = getVidNRes(masterPlaylist, query);
     return video;
   } catch (error) {
-    throw new Error(JSON.stringify(error, null, 2));
+    console.log("do sumn FAILED:", error.message);
+    return;
   }
 }
 
@@ -26,7 +27,9 @@ export async function streamhubUrlParse(url: string) {
     const res = await axios.get(url);
     let $ = load(res.data);
     let promise: any;
-    $("script").each((_idx, elem) => {
+    const arr = $("script").toArray();
+    for (let i = 0; i < arr.length - 1; i++) {
+      const elem = arr[i];
       const txt = $(elem).text();
       if (txt.includes("m3u8")) {
         const masterUrl = masterExtractor(txt);
@@ -34,9 +37,10 @@ export async function streamhubUrlParse(url: string) {
           console.log("video not found");
           return;
         }
-        promise = doSumn(masterUrl);
+        promise = await doSumn(masterUrl);
+        return promise;
       }
-    });
+    }
 
     return promise;
   } catch (error) {

@@ -1,35 +1,37 @@
-import axios from "axios";
-import { Episode } from "./types";
 import { episodeListParse } from "./utils/Episode/episodeListParse";
+import { searchAnimeRequest } from "./utils/Search/searchAnimeRequest";
 import { videoListParse } from "./utils/Video/videoListParse";
+import express from "express";
 
-async function main() {
-  const arr = await episodeListParse();
-  if (!arr) return;
-  console.log({ arr: JSON.stringify(arr, null, 2) });
-  arr.forEach((season) => {
-    season.forEach(async (episode: Episode) => {
-      console.log({ ep: episode.url });
-      const vid = await videoListParse(episode.url + "");
-      if (!vid) {
-        console.log("no vid", episode.epName);
-        return;
-      }
+const app = express();
 
-      console.log({ vid });
-    });
-  });
-  // arr[0].forEach((item: Episode) => {
-  //   const promise = videoListParse(item.url + "");
-  //   promises.push(promise);
-  // });
-  // Promise.all(promises)
-  //   .then((res) => {
-  //     console.log({ res });
-  //   })
-  //   .catch((error) => {
-  //     console.log(`error from promse.all ${error}`);
-  //   });
-}
+app.get("/", async (req, res) => {
+  res.send("esdfasdfakk");
+});
+app.get("/search/:query", async (req, res) => {
+  const { query } = req.params;
+  const movies = await searchAnimeRequest(1, query + "");
+  res.send(movies);
+});
 
-main();
+app.get("/:movieType/:movieId/episodes", async (req, res) => {
+  const { movieId, movieType } = req.params;
+  if (movieType !== "movies" && movieType !== "series") return;
+  const episodes = await episodeListParse(movieType, movieId + "");
+  res.send(episodes);
+});
+app.get("/video/:movieType/episodeId/:episodeId", async (req, res) => {
+  const { movieType, episodeId } = req.params;
+  if (
+    movieType !== "movies" &&
+    movieType !== "series" &&
+    movieType !== "episode"
+  )
+    return;
+  const episode = await videoListParse(movieType, episodeId);
+  res.send(episode);
+});
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log("server is running on port ", PORT);
+});

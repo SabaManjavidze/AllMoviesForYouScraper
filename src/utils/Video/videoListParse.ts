@@ -1,29 +1,32 @@
-import axios, { AxiosError } from "axios";
-import { load, CheerioAPI, Cheerio } from "cheerio";
-import { base_url, episode_url } from "../../constants";
-import { convertToBase64 } from "../General/Base64";
+import axios from "axios";
+import { load } from "cheerio";
+import { base_url } from "../../constants";
+import { MovieType } from "../../types";
 import { doodUrlParse } from "./doodUrlParse";
-import { getVidNRes } from "./getVidNRes";
-import { masterExtractor } from "./masterExtractor";
 import { streamhubUrlParse } from "./streamhubUrlParse";
 
-export async function videoListParse(episodeUrl: string) {
-  const { data: vidSerResp } = await axios.get(`${episodeUrl}`);
+export async function videoListParse(movieType: MovieType, episodeId: string) {
+  const url = `${base_url}/${movieType}/${episodeId}`;
+  console.log({ url });
+  const { data: vidSerResp } = await axios.get(url);
   let $ = load(vidSerResp);
   const iframe = $("iframe[src*=/?trembed]").attr("src") + "";
   const { data: videoListReq } = await axios.get(iframe);
   $ = load(videoListReq);
   var videoList: any;
   const videos = $("iframe");
-  videos.each((_idx, it) => {
+  const arr = videos.toArray();
+  for (let i = 0; i < arr.length; i++) {
+    const it = arr[i];
     const url = it.attribs.src;
     if (url.includes("https://dood")) {
-      const video = doodUrlParse(url);
-      videoList = video;
+      const video = await doodUrlParse(url);
+      return video;
     } else if (url.includes("streamhub")) {
-      const video = streamhubUrlParse(url);
+      const video = await streamhubUrlParse(url);
       videoList = video;
+      return video;
     }
-  });
+  }
   return videoList;
 }

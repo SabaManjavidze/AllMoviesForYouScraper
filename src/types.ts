@@ -4,3 +4,11 @@ export type Episode = {
   epNumber: string;
   url?: string;
 };
+
+export type Movie = {
+  title: string;
+  thumbnail_url: string;
+  url?: string;
+};
+
+export type MovieType = "series" | "movies" | "episode";
