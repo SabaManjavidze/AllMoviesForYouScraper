@@ -13,13 +13,13 @@ export async function videoListParse(episodeUrl: string) {
   const iframe = $("iframe[src*=/?trembed]").attr("src") + "";
   const { data: videoListReq } = await axios.get(iframe);
   $ = load(videoListReq);
-  var videoList: any = [];
+  var videoList: any;
   const videos = $("iframe");
   videos.each((_idx, it) => {
     const url = it.attribs.src;
     if (url.includes("https://dood")) {
       const video = doodUrlParse(url);
-      videoList.push(video);
+      videoList = video;
     } else if (url.includes("streamhub")) {
       const video = streamhubUrlParse(url);
       videoList = video;
