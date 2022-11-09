@@ -2,9 +2,11 @@ import { episodeListParse } from "./utils/Episode/episodeListParse";
 import { searchAnimeRequest } from "./utils/Search/searchAnimeRequest";
 import { videoListParse } from "./utils/Video/videoListParse";
 import express from "express";
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.get("/", async (req, res) => {
   res.send("esdfasdfakk");
 });
