@@ -6,6 +6,7 @@ export type Episode = {
 };
 
 export type Movie = {
+  slug: string;
   title: string;
   thumbnail_url: string;
   url?: string;

@@ -36,6 +36,8 @@ function searchAnimeFromElement(element: Element) {
     title: $("h2.Title").text().trim(),
     thumbnail_url,
   };
-  anime["movieType"] = anime.url.split("/").at(-3);
+  const split_url = anime.url.split("/");
+  anime["movieType"] = split_url.at(-3);
+  anime["slug"] = split_url.at(-2);
   return anime;
 }
