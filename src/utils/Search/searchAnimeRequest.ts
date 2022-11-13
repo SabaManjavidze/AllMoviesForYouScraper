@@ -31,10 +31,11 @@ function searchAnimeFromElement(element: Element) {
   if (!thumbnail_url?.includes("http")) {
     thumbnail_url = "https:" + thumbnail_url;
   }
-  const anime: Movie = {
+  const anime: Movie | any = {
     url: $("article > a").attr("href"),
     title: $("h2.Title").text().trim(),
     thumbnail_url,
   };
+  anime["movieType"] = anime.url.split("/").at(-3);
   return anime;
 }

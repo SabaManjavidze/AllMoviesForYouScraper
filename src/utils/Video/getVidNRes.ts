@@ -1,5 +1,7 @@
+import { VideoObj } from "src/types";
+
 export function getVidNRes(masterPlaylist: string, query: string) {
-  const vidList: { quality: string; video: string }[] = [];
+  const vidList: VideoObj[] = [];
   masterPlaylist.split(query).forEach((item) => {
     const qualIdx = item.indexOf("RESOLUTION=");
     const quality = item.substring(qualIdx, item.length - 1);
@@ -14,7 +16,7 @@ export function getVidNRes(masterPlaylist: string, query: string) {
       0,
       video.indexOf("8" + query2) + 1 || video.length
     );
-    const vid = { quality: qualityY, video: videoO };
+    const vid: VideoObj = { quality: qualityY, video: videoO };
     vidList.push(vid);
   });
   return vidList;
