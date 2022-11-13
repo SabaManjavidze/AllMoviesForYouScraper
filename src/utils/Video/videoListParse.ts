@@ -7,8 +7,8 @@ import { streamhubUrlParse } from "./streamhubUrlParse";
 
 export async function videoListParse(movieType: MovieType, episodeId: string) {
   const url = `${base_url}/${movieType}/${episodeId}`;
-  console.log({ url });
   const { data: vidSerResp } = await axios.get(url);
+  if (!vidSerResp) return null;
   let $ = load(vidSerResp);
   const iframe = $("iframe[src*=/?trembed]").attr("src") + "";
   const { data: videoListReq } = await axios.get(iframe);

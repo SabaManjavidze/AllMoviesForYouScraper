@@ -10,6 +10,7 @@ export async function episodeListParse(movieType: MovieType, slug: string) {
   const res = await axios.get(
     `https://allmoviesforyou.net/${movieType}/${slug}/`
   );
+  if (!res?.data) return null;
   const $ = load(res.data);
   const vidUrl = $("link[rel=canonical]").attr("href");
   if (!vidUrl) throw new Error("season not found");
