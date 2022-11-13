@@ -30,6 +30,7 @@ app.get("/video/:movieType/episodeId/:episodeId", async (req, res) => {
     movieType !== "episode"
   )
     return;
+
   const episode = await videoListParse(movieType, episodeId);
   res.send(episode);
 });
