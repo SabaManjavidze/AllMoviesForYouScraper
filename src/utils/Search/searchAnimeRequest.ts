@@ -27,10 +27,14 @@ export async function searchAnimeRequest(page: number, query: string) {
 
 function searchAnimeFromElement(element: Element) {
   const $ = load(element);
+  let thumbnail_url = $("div.Image > figure > img").attr("data-src");
+  if (!thumbnail_url?.includes("http")) {
+    thumbnail_url = "https:" + thumbnail_url;
+  }
   const anime: Movie = {
     url: $("article > a").attr("href"),
     title: $("h2.Title").text().trim(),
-    thumbnail_url: "https:" + $("div.Image > figure > img").attr("data-src"),
+    thumbnail_url,
   };
   return anime;
 }
