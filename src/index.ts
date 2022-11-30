@@ -28,7 +28,7 @@ app.get("/search/:query", async (req, res) => {
     });
     res.send(parsedMovies);
   } catch (error) {
-    res.send({ message: "Something went wrong!" });
+    res.send({ message: "Something went wrong!", error });
   }
 });
 
@@ -41,7 +41,7 @@ app.get("/details/:movieId", async (req, res) => {
     );
     res.send(details);
   } catch (error) {
-    res.send({ message: "Something went wrong" });
+    res.send({ message: "Something went wrong", error });
   }
 });
 app.get("/episodes/:movieId/:seasonNum", async (req, res) => {
@@ -53,7 +53,7 @@ app.get("/episodes/:movieId/:seasonNum", async (req, res) => {
     );
     res.send(details);
   } catch (error) {
-    res.send({ message: "Something went wrong" });
+    res.send({ message: "Something went wrong", error });
   }
 });
 app.get("/video/:movieId/:episodeId", async (req, res) => {
