@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import axios from "axios";
 import { AdjaraMovie, Movie } from "./types";
-import { IMOVIE_BASE_URL } from "./constants";
+import { IMOVIE_BASE_URL, IMOVIE_ORIGIN } from "./constants";
 
 const app = express();
 
@@ -16,7 +16,8 @@ app.get("/search/:query", async (req, res) => {
     const movie_filters =
       "https://api.imovies.cc/api/v1/search-advanced?movie_filters%5B%23%2Fbrowse%2Fmovies%5D=&movie_filters%5Bwith_actors%5D=3&movie_filters%5Bwith_directors%5D=1&filters%5Btype%5D=movie&keywords=inside%20job&page=1&per_page=20";
     const { data: movies } = await axios.get(
-      `${IMOVIE_BASE_URL}/search-advanced?${movie_filters}&keywords=${query}&page=1&per_page=20`
+      `${IMOVIE_BASE_URL}/search-advanced?${movie_filters}&keywords=${query}&page=1&per_page=20`,
+      { headers: { origin: IMOVIE_ORIGIN, referer: IMOVIE_ORIGIN } }
     );
     const parsedMovies = movies.data.map((item: AdjaraMovie) => {
       return {
