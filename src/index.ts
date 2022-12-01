@@ -15,10 +15,9 @@ app.get("/search/:query", async (req, res) => {
   try {
     const movie_filters =
       "https://api.imovies.cc/api/v1/search-advanced?movie_filters%5B%23%2Fbrowse%2Fmovies%5D=&movie_filters%5Bwith_actors%5D=3&movie_filters%5Bwith_directors%5D=1&filters%5Btype%5D=movie&keywords=inside%20job&page=1&per_page=20";
-    const { data: movies } = await axios.get(
-      `${IMOVIE_BASE_URL}/search-advanced?${movie_filters}&keywords=${query}&page=1&per_page=20`,
-      { headers: { origin: IMOVIE_ORIGIN, referer: IMOVIE_ORIGIN } }
-    );
+    const search_url = `${IMOVIE_BASE_URL}/search-advanced?${movie_filters}&keywords=${query}&page=1&per_page=20`;
+    console.log({ search_url });
+    const { data: movies } = await axios.get(search_url);
     const parsedMovies = movies.data.map((item: AdjaraMovie) => {
       return {
         movieType: item.isTvShow ? "series" : "movies",
